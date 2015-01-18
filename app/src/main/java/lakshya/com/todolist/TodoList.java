@@ -53,10 +53,9 @@ public class TodoList extends Activity {
             }
         });
 
-
         mTodos = new ArrayList<Todo>();
 
-        mTodoAdapter = new ArrayAdapter<Todo>(this, android.R.layout.simple_list_item_1, mTodos);
+        mTodoAdapter = new ArrayAdapter<Todo>(this, R.layout.list_view_row_item, mTodos);
 
         mListView = (ListView)findViewById(R.id.lv_displaylist);
 

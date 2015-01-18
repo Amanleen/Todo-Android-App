@@ -8,6 +8,7 @@
     <string name="nothingYet_textview">Nothing Yet</string>
     <string name="entersometext_hint">Enter some text</string>
     <string name="Add_label">Add</string>
-    <string name="title_activity_edit_todo">EditTodo</string>
+    <string name="title_activity_edit_todo">Edit Item</string>
+    <string name="title_activity_todo_list">Simple Todo</string>
 
 </resources>

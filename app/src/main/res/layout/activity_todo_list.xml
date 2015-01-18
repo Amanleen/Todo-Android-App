@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:id="@+id/lv_displaylist" />
+        android:id="@+id/lv_displaylist"
+        android:divider="@color/todo_list_divider_color"
+        android:dividerHeight="1dp"/>
 
 
     <LinearLayout

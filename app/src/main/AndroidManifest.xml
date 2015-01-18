@@ -10,6 +10,7 @@
         <activity
             android:name=".TodoList"
             android:label="@string/app_name"
+            android:icon="@android:drawable/checkbox_on_background"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +21,7 @@
         <activity
             android:name=".EditTodo"
             android:label="@string/title_activity_edit_todo"
+            android:icon="@android:drawable/checkbox_on_background"
             android:screenOrientation="portrait">
         </activity>
     </application>

@@ -1,8 +1,34 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="@style/_AppTheme"/>
+
+    <style name="_AppTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+
+        <item name="android:editTextBackground">@drawable/apptheme_edit_text_holo_light</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/apptheme_btn_check_holo_light</item>
+
+        <item name="android:buttonStyle">@style/ButtonAppTheme</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButtonAppTheme</item>
+
+        <item name="android:listChoiceBackgroundIndicator">@drawable/apptheme_list_selector_holo_light</item>
+
+        <item name="android:activatedBackgroundIndicator">@drawable/apptheme_activated_background_holo_light</item>
+
     </style>
 
+    <style name="ActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
+        <item name="android:background">@color/action_bar_color</item>
+    </style>
+
+    <style name="ButtonAppTheme" parent="android:Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+    </style>
+
+    <style name="ImageButtonAppTheme" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@drawable/apptheme_btn_default_holo_light</item>
+    </style>
 </resources>

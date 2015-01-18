@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="action_bar_color">#4B0082</color>
+    <color name="todo_list_item_text_color">#4B0082</color>
+    <color name="todo_list_divider_color">#C0C0C0</color>
+</resources>
