@@ -21,4 +21,4 @@ Walkthrough of all user stories:
 
 GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
-{"_em_plugin_v":"1.0.6_em_chrome","_em_plugin_partner_id":0,"_em_is_panel":1}
+
