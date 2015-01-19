@@ -7,36 +7,42 @@ import java.io.Serializable;
  */
 public class Todo implements Serializable{
 
-   private String mTitle;
+    private String mTitle;
+    private long mTargetDate;
+    private long mId;
+
+    public Todo(String mTitle, long mTargetDate) {
+        this.mTitle = mTitle;
+        this.mTargetDate = mTargetDate;
+    }
+
+    public long getId() {
+        return mId;
+    }
+
+    public void setId(long mId) {
+        this.mId = mId;
+    }
+
+    public String getTitle() {
+        return mTitle;
+    }
+
+    public void setTitle(String mTitle) {
+        this.mTitle = mTitle;
+    }
+
+    public long getTargetDate() {
+        return mTargetDate;
+    }
+
+    public void setTargetDate(long mTargetDate) {
+        this.mTargetDate = mTargetDate;
+    }
 
     @Override
     public String toString() {
         return mTitle;
     }
 
-    public int getmId() {
-        return mId;
-    }
-
-    public void setmId(int mId) {
-        this.mId = mId;
-    }
-
-    private int mId;
-
-    public Todo(int mId, String mTitle) {
-        this.mId = mId;
-        this.mTitle = mTitle;
-    }
-
-
-
-    public String getmTitle() {
-
-        return mTitle;
-    }
-
-    public void setmTitle(String mTitle) {
-        this.mTitle = mTitle;
-    }
 }

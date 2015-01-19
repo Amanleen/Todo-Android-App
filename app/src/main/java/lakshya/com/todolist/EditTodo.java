@@ -12,10 +12,11 @@ import android.widget.Toast;
 
 public class EditTodo extends Activity {
 
-    private EditText mTodoTitle;
-
     static String EXTRA_TODO = "EXTRA_TODO";
     static String EXTRA_POSITION = "EXTRA_POSITION";
+
+    private EditText mTodoTitle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,8 +28,8 @@ public class EditTodo extends Activity {
         Intent intent = getIntent();
         final Todo todo = (Todo)intent.getSerializableExtra(EXTRA_TODO);
 
-        mTodoTitle.setText(todo.getmTitle());
-        mTodoTitle.setSelection((todo.getmTitle()).length());
+        mTodoTitle.setText(todo.getTitle());
+        mTodoTitle.setSelection((todo.getTitle()).length());
 
         Button saveButton = (Button)findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -51,11 +52,11 @@ public class EditTodo extends Activity {
 
     private void saveAndFinish()
     {
-        final int position = (int)getIntent().getIntExtra(EXTRA_POSITION,-1);
+        final int position = (int)getIntent().getIntExtra(EXTRA_POSITION, -1);
         final Todo todo = (Todo)getIntent().getSerializableExtra(EXTRA_TODO);
         if(!TextUtils.isEmpty(mTodoTitle.getText())) {
             String newTitle = mTodoTitle.getText().toString();
-            todo.setmTitle(newTitle);
+            todo.setTitle(newTitle);
             Intent resultIntent = new Intent();
             resultIntent.putExtra(EXTRA_TODO, todo);
             resultIntent.putExtra(EXTRA_POSITION,position);

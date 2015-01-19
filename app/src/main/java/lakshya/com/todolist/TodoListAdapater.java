@@ -27,7 +27,7 @@ public class TodoListAdapater extends BaseAdapter {
 
     @Override
     public long getItemId(int position) {
-        return mTodos.get(position).getmId();
+        return mTodos.get(position).getId();
     }
 
     @Override

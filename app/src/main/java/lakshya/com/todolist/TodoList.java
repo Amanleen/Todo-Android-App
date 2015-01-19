@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
@@ -25,30 +24,28 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
-
 public class TodoList extends Activity {
+    private static final String TODO_LIST_FILE = "TODO_LIST_FILE";
 
     private EditText mEnteredWords;
     private ListView mListView;
     private ArrayAdapter<Todo> mTodoAdapter;
     private ArrayList<Todo> mTodos;
-    private static final String TODO_LIST_FILE = "TODO_LIST_FILE";
     private Handler mUIThreadHandler;
     private ExecutorService mSingleThreadExecutor;
+    private TodoDbOpenHelper mTodoDbOpenHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list);
-
+        mTodoDbOpenHelper = new TodoDbOpenHelper(this);
         mEnteredWords = (EditText)findViewById(R.id.et_words);
         Button submitButton = (Button)findViewById(R.id.btnSubmit);
 
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 onSubmit();
             }
         });
@@ -74,7 +71,6 @@ public class TodoList extends Activity {
         mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-
                 Todo deletedTodo = mTodos.remove(position);
                 deleteListItem(deletedTodo);
                 mTodoAdapter.notifyDataSetChanged();
@@ -91,19 +87,15 @@ public class TodoList extends Activity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(resultCode!=RESULT_OK || data==null)
-        {
+        if(resultCode!=RESULT_OK || data==null) {
             return;
-        }
-        else
-        {
+        } else {
             Todo editedTodo = (Todo) data.getSerializableExtra(EditTodo.EXTRA_TODO);
 
             int editedTodoPosition = data.getIntExtra(EditTodo.EXTRA_POSITION, -1);
-            if(editedTodoPosition!=-1)
-            {
+            if(editedTodoPosition!=-1) {
                 Todo todoTemp = mTodos.get(editedTodoPosition);
-                todoTemp.setmTitle(editedTodo.getmTitle());
+                todoTemp.setTitle(editedTodo.getTitle());
                 mTodoAdapter.notifyDataSetChanged();
                 update(todoTemp);
             }
@@ -117,71 +109,71 @@ public class TodoList extends Activity {
         super.onConfigurationChanged(newConfig);
     }
 
-    private void onSubmit()
-    {
-        if(!TextUtils.isEmpty(mEnteredWords.getText()))
-        {
+    private void onSubmit() {
+        if(!TextUtils.isEmpty(mEnteredWords.getText())) {
             String enteredWord = mEnteredWords.getText().toString();
-            Todo todo = new Todo(mTodos.size(), enteredWord);
+            Todo todo = new Todo(enteredWord, -1);
             mTodoAdapter.add(todo);
-            writeAll();
+            add(todo);
             mEnteredWords.setText(null);
 
         }
 
     }
 
-    private void readAll()
-    {
+    private void readAll() {
         mSingleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                readTodoListFile();
+                mTodos.addAll(mTodoDbOpenHelper.readAll());
+                notifyAdapter();
             }
         });
     }
 
-    private void writeAll()
-    {
+    private void add(final Todo todo) {
         mSingleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                saveTodoListToFile();
+                mTodoDbOpenHelper.add(todo);
             }
         });
     }
 
-    private void update(Todo todo)
-    {
+    private void update(final Todo todo) {
         mSingleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                saveTodoListToFile();
+                mTodoDbOpenHelper.update(todo);
             }
         });
     }
 
-    private void deleteListItem(Todo todo)
-    {
+    private void deleteListItem(final Todo todo) {
         mSingleThreadExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                saveTodoListToFile();
+                mTodoDbOpenHelper.delete(todo);
             }
         });
     }
-    private synchronized void readTodoListFile()
+
+    private void notifyAdapter()
     {
+        mUIThreadHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mTodoAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private synchronized void readTodoListFile() {
         try {
             FileInputStream fIn = this.openFileInput(TODO_LIST_FILE);
             ObjectInputStream oInStream = new ObjectInputStream(fIn);
             mTodos.addAll((ArrayList<Todo>) oInStream.readObject());
-            mUIThreadHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    mTodoAdapter.notifyDataSetChanged();
-                }
-            });
+
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (StreamCorruptedException e) {
@@ -193,8 +185,7 @@ public class TodoList extends Activity {
         }
     }
 
-    private synchronized void saveTodoListToFile()
-    {
+    private synchronized void saveTodoListToFile() {
         try {
             FileOutputStream fOut = this.openFileOutput(TODO_LIST_FILE, MODE_PRIVATE);
             ObjectOutputStream oOutStream = new ObjectOutputStream(fOut);
