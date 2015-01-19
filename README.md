@@ -13,6 +13,8 @@ Does your app persist todo items and retrieve them properly on app restart?
  * [x] Required: User can edit todo items in a new activity.
  * [x] Required: The app persists todo items and retrieves them on re-start.
  * [X] Optional: Tweaked the UI style.
+ * [X] Optional: Persisted the todo items into SQLite instead of a text file.
+ * [X] Optional: Used a custom layout and adapter.
  
 
 Walkthrough of all user stories:
