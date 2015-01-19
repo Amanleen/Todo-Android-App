@@ -1,8 +1,11 @@
 package lakshya.com.todolist;
 
+import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +13,11 @@ import java.util.List;
 public class TodoListAdapater extends BaseAdapter {
 
     List<Todo> mTodos;
+    Context mContext;
 
-    public TodoListAdapater() {
-        mTodos=new ArrayList<Todo>();
+    public TodoListAdapater(ArrayList<Todo> todos, Context context) {
+        mTodos = todos;
+        mContext = context;
     }
 
     @Override
@@ -32,6 +37,13 @@ public class TodoListAdapater extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        return null;
+        if(convertView==null) {
+            LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+            convertView = layoutInflater.inflate(R.layout.list_view_row_item, parent, false);
+        }
+        TextView listItem = (TextView)convertView.findViewById(R.id.todo_title);
+        Todo todo = mTodos.get(position);
+        listItem.setText(todo.getTitle());
+        return convertView;
     }
 }

@@ -29,7 +29,7 @@ public class TodoList extends Activity {
 
     private EditText mEnteredWords;
     private ListView mListView;
-    private ArrayAdapter<Todo> mTodoAdapter;
+    private TodoListAdapater mTodoAdapter;
     private ArrayList<Todo> mTodos;
     private Handler mUIThreadHandler;
     private ExecutorService mSingleThreadExecutor;
@@ -52,7 +52,7 @@ public class TodoList extends Activity {
 
         mTodos = new ArrayList<Todo>();
 
-        mTodoAdapter = new ArrayAdapter<Todo>(this, R.layout.list_view_row_item, mTodos);
+        mTodoAdapter = new TodoListAdapater(mTodos, this);
 
         mListView = (ListView)findViewById(R.id.lv_displaylist);
 
@@ -113,7 +113,8 @@ public class TodoList extends Activity {
         if(!TextUtils.isEmpty(mEnteredWords.getText())) {
             String enteredWord = mEnteredWords.getText().toString();
             Todo todo = new Todo(enteredWord, -1);
-            mTodoAdapter.add(todo);
+            mTodos.add(todo);
+            notifyAdapter();
             add(todo);
             mEnteredWords.setText(null);
 
