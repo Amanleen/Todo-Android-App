@@ -41,9 +41,20 @@ public class TodoListAdapater extends BaseAdapter {
             LayoutInflater layoutInflater = LayoutInflater.from(mContext);
             convertView = layoutInflater.inflate(R.layout.list_view_row_item, parent, false);
         }
-        TextView listItem = (TextView)convertView.findViewById(R.id.todo_title);
         Todo todo = mTodos.get(position);
-        listItem.setText(todo.getTitle());
+
+        TextView title = (TextView)convertView.findViewById(R.id.todo_title);
+        title.setText(todo.getTitle());
+
+        TextView dueDate = (TextView) convertView.findViewById(R.id.due_date);
+        if(todo.getTargetDate()!=-1) {
+            dueDate.setVisibility(View.VISIBLE);
+            dueDate.setText(todo.getFormattedDate());
+        }
+        else {
+            dueDate.setVisibility(View.GONE);
+            dueDate.setText(null);
+        }
         return convertView;
     }
 }

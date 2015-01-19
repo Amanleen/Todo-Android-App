@@ -16,6 +16,7 @@ public class TodoDbOpenHelper extends SQLiteOpenHelper {
         String ID="ID";
         String TARGET_DATE ="TARGET_DATE";
         String TITLE="TITLE";
+        String CREATION_DATE="CREATION_DATE";
     }
 
     private static final String TEXT_TYPE = " TEXT";
@@ -26,7 +27,8 @@ public class TodoDbOpenHelper extends SQLiteOpenHelper {
             "CREATE TABLE " + TODO.TABLE_NAME + " (" +
                     TODO.ID + INTEGER_TYPE + " PRIMARY KEY AUTOINCREMENT " + COMMA_SEP +
                     TODO.TITLE + TEXT_TYPE + COMMA_SEP +
-                    TODO.TARGET_DATE + INTEGER_TYPE +
+                    TODO.TARGET_DATE + INTEGER_TYPE + COMMA_SEP+
+                    TODO.CREATION_DATE+INTEGER_TYPE+
             " )";
 
     private static final String SQL_DELETE_ENTRIES =
@@ -61,7 +63,7 @@ public class TodoDbOpenHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(TODO.TITLE, todo.getTitle());
         values.put(TODO.TARGET_DATE, todo.getTargetDate());
-
+        values.put(TODO.CREATION_DATE, todo.getCreationDate());
         // Insert the new row, returning the primary key value of the new row
         long newRowId = db.insert(TODO.TABLE_NAME,"null",values);
         todo.setId(newRowId);
@@ -76,7 +78,8 @@ public class TodoDbOpenHelper extends SQLiteOpenHelper {
         String[] projection = {
                 TODO.ID,
                 TODO.TITLE,
-                TODO.TARGET_DATE
+                TODO.TARGET_DATE,
+                TODO.CREATION_DATE
         };
 
         String sortOrder =
@@ -97,8 +100,9 @@ public class TodoDbOpenHelper extends SQLiteOpenHelper {
             int id = c.getInt(c.getColumnIndex(TODO.ID));
             String title = c.getString(c.getColumnIndex(TODO.TITLE));
             long targetDate = c.getLong(c.getColumnIndex(TODO.TARGET_DATE));
+            long creationDate = c.getLong(c.getColumnIndex(TODO.CREATION_DATE));
 
-            Todo todo = new Todo(title, targetDate);
+            Todo todo = new Todo(title, targetDate, creationDate);
             todo.setId(id);
             todos.add(todo);
         }

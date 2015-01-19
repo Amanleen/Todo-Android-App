@@ -21,6 +21,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -96,8 +98,9 @@ public class TodoList extends Activity {
             if(editedTodoPosition!=-1) {
                 Todo todoTemp = mTodos.get(editedTodoPosition);
                 todoTemp.setTitle(editedTodo.getTitle());
-                mTodoAdapter.notifyDataSetChanged();
+                todoTemp.setTargetDate(editedTodo.getTargetDate());
                 update(todoTemp);
+                reorder();
             }
 //
         }
@@ -112,12 +115,11 @@ public class TodoList extends Activity {
     private void onSubmit() {
         if(!TextUtils.isEmpty(mEnteredWords.getText())) {
             String enteredWord = mEnteredWords.getText().toString();
-            Todo todo = new Todo(enteredWord, -1);
+            Todo todo = new Todo(enteredWord, -1, System.currentTimeMillis());
             mTodos.add(todo);
-            notifyAdapter();
             add(todo);
             mEnteredWords.setText(null);
-
+            reorder();
         }
 
     }
@@ -169,33 +171,31 @@ public class TodoList extends Activity {
         });
     }
 
-    private synchronized void readTodoListFile() {
-        try {
-            FileInputStream fIn = this.openFileInput(TODO_LIST_FILE);
-            ObjectInputStream oInStream = new ObjectInputStream(fIn);
-            mTodos.addAll((ArrayList<Todo>) oInStream.readObject());
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (StreamCorruptedException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private synchronized void saveTodoListToFile() {
-        try {
-            FileOutputStream fOut = this.openFileOutput(TODO_LIST_FILE, MODE_PRIVATE);
-            ObjectOutputStream oOutStream = new ObjectOutputStream(fOut);
-            oOutStream.writeObject(mTodos);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+   private void reorder(){
+       Collections.sort(mTodos,new Comparator<Todo>() {
+           @Override
+           public int compare(Todo lhs, Todo rhs) {
+                if (lhs.getTargetDate()==-1 && rhs.getTargetDate()==-1) {
+                    if(lhs.getCreationDate()<rhs.getCreationDate()) {
+                        return -1;
+                    }else {
+                        return 1;
+                    }
+                }
+                if(lhs.getTargetDate()==-1){
+                    return -1;
+                }
+               if (rhs.getTargetDate()==-1){
+                   return 1;
+               }
+               if(lhs.getTargetDate()<rhs.getTargetDate()){
+                   return -1;
+               }else if(lhs.getTargetDate()>rhs.getTargetDate()){
+                   return 1;
+               }
+               return 0;
+           }
+       });
+       notifyAdapter();
+   }
 }
